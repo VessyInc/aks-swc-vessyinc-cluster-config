@@ -5,6 +5,8 @@ namespace: argocd
 
 resources:
   - namespace.yaml
+  - appproject-platform.yaml
+  - applicationset-platform.yaml
   - https://raw.githubusercontent.com/argoproj/argo-cd/v3.6.0-rc1/manifests/install.yaml
 
 images:

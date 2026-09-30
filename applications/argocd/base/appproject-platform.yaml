@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: "This project is used by Argo CD to group applications that support the cluster and its workloads."
+  sourceRepos: []
+
+  # Permitted destination clusters and namespaces
+  destinations:
+  - namespace: "*"
+    name: "in-cluster"
+    server: https://kubernetes.default.svc
+
+  # Allowed cluster-scoped resource types (Empty list = no cluster-scoped resources permitted)
+  clusterResourceWhitelist:
+  - group: "*"
+    kind: "*"
+
+  # Allowed namespace-scoped resource types (Empty list = no namespace-scoped resources permitted)
+  namespaceResourceWhitelist:
+  - group: "*"
+    kind: "*"

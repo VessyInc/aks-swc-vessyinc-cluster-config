@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: example-app
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: "Dedicated project for example-app - scoped tighter than the shared platform project."
+  sourceRepos:
+    - "https://github.com/VessyInc/aks-swc-vessyinc-cluster-config.git"
+
+  destinations:
+    - namespace: example-app
+      name: in-cluster
+      server: https://kubernetes.default.svc
+
+  clusterResourceWhitelist: []
+
+  namespaceResourceWhitelist:
+    - group: "apps"
+      kind: "Deployment"
+    - group: ""
+      kind: "Service"
+    - group: ""
+      kind: "ConfigMap"
+    - group: ""
+      kind: "Secret"
+    - group: "networking.k8s.io"
+      kind: "Ingress"
