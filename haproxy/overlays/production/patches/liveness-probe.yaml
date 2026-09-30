@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: haproxy-kubernetes-ingress
+  namespace: haproxy-controller
+spec:
+  selector:
+    matchLabels:
+      run: haproxy-ingress
+  template:
+    spec:
+      containers:
+        - name: haproxy-ingress
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 1042
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 5

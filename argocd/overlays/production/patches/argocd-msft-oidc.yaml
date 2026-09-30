@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-server
+  namespace: argocd
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-server
+  template:
+    metadata:
+      labels:
+        azure.workload.identity/use: "true"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argocd-server
+  namespace: argocd
+  annotations:
+    azure.workload.identity/client-id: "cf919ef7-2f99-4fa9-a29e-ba42d13311b9"
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: argocd-application-controller
+  namespace: argocd
+spec:
+  serviceName: argocd-application-controller
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-application-controller
+  template:
+    metadata:
+      labels:
+        azure.workload.identity/use: "true"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argocd-application-controller
+  namespace: argocd
+  annotations:
+    # Same UAI as argocd-server; the UAI has two federated credentials,
+    # one per service account subject (see swc/aks/local.tf).
+    azure.workload.identity/client-id: "cf919ef7-2f99-4fa9-a29e-ba42d13311b9"

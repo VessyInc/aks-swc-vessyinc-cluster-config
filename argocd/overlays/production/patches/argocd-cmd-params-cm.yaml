@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cmd-params-cm
+  namespace: argocd
+data:
+  # TLS is terminated upstream (Application Gateway -> HAProxy), both are
+  # plain HTTP internally. Without this, argocd-server 307-redirects every
+  # request to https://, which loops forever since the edge already stripped TLS.
+  server.insecure: "true"
+  controller.diff.server.side: "true"
+  reposerver.git.request.timeout: "180s"
+  reposerver.parallelism.limit: "10"
+  server.enable.gzip: "true"
