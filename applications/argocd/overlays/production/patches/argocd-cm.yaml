@@ -14,6 +14,7 @@ data:
              requestedIDTokenClaims:
                 groups:
                    essential: true
+                   value: "ApplicationGroup"
              requestedScopes:
                 - openid
                 - profile
