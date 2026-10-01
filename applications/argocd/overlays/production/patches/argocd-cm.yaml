@@ -9,6 +9,8 @@ data:
              name: Azure
              issuer: https://login.microsoftonline.com/9cdec346-9087-4758-a5a5-2144a3ed72d4/v2.0
              clientID: 6ae1669e-737d-4846-85a8-f73aa9764958
+             azure:
+               useWorkloadIdentity: true
              requestedIDTokenClaims:
                 groups:
                    essential: true
