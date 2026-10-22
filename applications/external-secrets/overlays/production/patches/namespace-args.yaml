@@ -10,10 +10,6 @@ metadata:
   name: external-secrets-cert-controller
   namespace: external-secrets
 spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: external-secrets
-      app.kubernetes.io/instance: external-secrets
   template:
     spec:
       containers:
@@ -37,10 +33,6 @@ metadata:
   name: external-secrets-webhook
   namespace: external-secrets
 spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: external-secrets
-      app.kubernetes.io/instance: external-secrets
   template:
     spec:
       containers:
