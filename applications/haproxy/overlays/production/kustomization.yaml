@@ -10,3 +10,4 @@ patches:
   - path: patches/resource-limits.yaml
   - path: patches/service-type.yaml
   - path: patches/liveness-probe.yaml
+  - path: patches/publish-service.yaml
