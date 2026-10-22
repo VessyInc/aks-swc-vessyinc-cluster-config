@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: wekan
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: "Dedicated project for wekan - scoped tighter than the shared platform project."
+  sourceRepos:
+    - "https://github.com/VessyInc/wekan.git"
+
+  destinations:
+    - namespace: wekan
+      name: in-cluster
+      server: https://kubernetes.default.svc
+
+  clusterResourceWhitelist: []
+
+
+  namespaceResourceWhitelist:
+    - group: "apps"
+      kind: "Deployment"
+    - group: ""
+      kind: "Service"
+    - group: ""
+      kind: "ConfigMap"
+    - group: ""
+      kind: "Secret"
+    - group: ""
+      kind: "ServiceAccount"
+    - group: "networking.k8s.io"
+      kind: "Ingress"
+    - group: "external-secrets.io"
+      kind: "SecretStore"
+    - group: "external-secrets.io"
+      kind: "ExternalSecret"

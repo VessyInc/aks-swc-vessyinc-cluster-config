@@ -1,0 +1,57 @@
+# The upstream release manifest ships every namespaced object in "default" and
+# passes that namespace a second time as container args. Kustomize's namespace
+# transformer rewrites metadata and the webhook clientConfig, but it cannot
+# rewrite args - without this patch the cert-controller writes the serving cert
+# into default/ and the webhook signs for *.default.svc, so every SecretStore
+# and ExternalSecret admission call fails on an x509 hostname mismatch.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: external-secrets-cert-controller
+  namespace: external-secrets
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: external-secrets
+      app.kubernetes.io/instance: external-secrets
+  template:
+    spec:
+      containers:
+        - name: cert-controller
+          args:
+            - certcontroller
+            - --crd-requeue-interval=5m
+            - --service-name=external-secrets-webhook
+            - --service-namespace=external-secrets
+            - --secret-name=external-secrets-webhook
+            - --secret-namespace=external-secrets
+            - --metrics-addr=:8080
+            - --healthz-addr=:8081
+            - --loglevel=info
+            - --zap-time-encoding=epoch
+            - --enable-partial-cache=true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: external-secrets-webhook
+  namespace: external-secrets
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: external-secrets
+      app.kubernetes.io/instance: external-secrets
+  template:
+    spec:
+      containers:
+        - name: webhook
+          args:
+            - webhook
+            - --port=10250
+            - --dns-name=external-secrets-webhook.external-secrets.svc
+            - --cert-dir=/tmp/certs
+            - --check-interval=5m
+            - --metrics-addr=:8080
+            - --healthz-addr=:8081
+            - --loglevel=info
+            - --zap-time-encoding=epoch
